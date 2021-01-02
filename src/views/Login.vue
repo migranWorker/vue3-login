@@ -19,12 +19,14 @@
 <script>
     import { reactive, ref } from "vue";
     import { useRouter } from "vue-router";
+    import { useStore } from "vuex";
 
     export default {
         name: 'Login',
         setup() {
             const formRef = ref(null);
             const router = useRouter();
+            const store = useStore();
             const form = reactive({
                 userName: '',
                 password: '',
@@ -34,13 +36,10 @@
                 password: [{ required: true, message: '请填写密码', trigger: ['blur', 'change'] }]
             });
 
-            // const login = () => {
-            //
-            // };
-
             const submit = () => {
-                formRef.value.validate(valid => {
+                formRef.value.validate(async valid => {
                     if (!valid) return;
+                    await store.dispatch('EDIT_USER_INFO', form);
                     router.push({
                         path: '/'
                     });
